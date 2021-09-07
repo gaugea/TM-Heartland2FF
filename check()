@@ -1,0 +1,102 @@
+/** @OnlyCurrentDoc */
+
+function check() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("Report");
+  var data = sheet.getDataRange().getValues();
+
+  for(var h = 0; h<data.length;h++){
+    if(data[h][0] == "Grand total:"){ 
+      var finalrow = ((h))
+      ;
+    }
+  };
+ 
+  for(var i = 9;i<finalrow + 1;i++){
+    var rowct = String(i)
+    var brand = sheet.getRange("A" + rowct).getValue();
+    var stylename = sheet.getRange("B"+ rowct).getValue();
+    var color = sheet.getRange("C"+ rowct).getValue();
+    var sku = sheet.getRange("D"+ rowct).getValue();
+    var gender = sheet.getRange("E"+ rowct).getValue();
+    var category1 = sheet.getRange("F"+ rowct).getValue();
+    var price = sheet.getRange("G"+ rowct).getValue();
+    var fab = sheet.getRange("H"+ rowct).getValue();
+    var szn = sheet.getRange("K" + rowct).getValue();
+    var size = sheet.getRange("J"+ rowct).getValue();
+    console.log("Item: " + brand + ", " + stylename + ", " + color + ", " + sku + ", " + gender + ", " + category1 + ", " + price + ", " + fab + " found.");
+    SpreadsheetApp.flush();
+    eval("var " + ("sizerem" + rowct) + " = brand + color + sku + price");
+    eval("var " + ("brand" + rowct) + " = brand");
+    eval("var " + ("stylename" + rowct) + " = stylename");
+    eval("var " + ("color" + rowct) + " = color");
+    eval("var " + ("sku" + rowct) + " = sku");
+    eval("var " + ("gender" + rowct) + " = gender");
+    eval("var " + ("category1" + rowct) + " = category1");
+    eval("var " + ("price" + rowct) + " = price");
+    eval("var " + ("fab" + rowct) + " = fab");
+    eval("var " + ("size" + rowct) + " = size");
+    eval("var " + ("szn" + rowct) + " = szn");
+    //var csizerem = ("sizerem" + rowct);
+    console.log("Checking for duplicates on row " + rowct + ".");
+
+    if (Number(rowct) > 9) {
+
+      if( (readValue("sizerem" + rowct)) == (readValue("sizerem" + (Number(rowct) - 1)))) {
+        sheet.deleteRow(rowct)
+        i = i - 1
+        finalrow = finalrow - 1
+        console.log("Product on row " + rowct + " was deleted due to being a duplicate. Product name: " + stylename)
+        SpreadsheetApp.flush()
+      }
+    }
+  }
+  //var last = rowct
+  var upload = ss.getSheetByName("Upload");
+  upload.activate();
+  //var sct = 1
+  //var upct = ""
+  //for (var j = 0; j < (Math.floor(last/30)); j++){
+  //  eval("upload.copyTo(ss).setName('Upload" + String(j) + "')")
+  //  eval("var upload" + String(j) + " = ss.getSheetByName('Upload" + String(j) + "')")
+  //  Logger.log("Sheet named Upload" + String(j) + " created.")
+  //}
+
+  for (i=9; i < finalrow +1; i++){
+    eval("upload.getRange('A" + (i - 7) + "').setValue(brand" + i + ");")
+    eval("upload.getRange('M" + (i - 7) + "').setValue(stylename" + i + ");")
+    eval("upload.getRange('C" + (i - 7) + "').setValue(color" + i + ");")
+    eval("upload.getRange('J" + (i - 7) + "').setValue(sku" + i + ");")
+    eval("upload.getRange('G" + (i - 7) + "').setValue(stylename" + i + " + ' - ' + size" + i + ");")
+    eval("upload.getRange('F" + (i - 7) + "').setValue(gender" + i + " + ' ' + category1" + i + ");")
+    eval("upload.getRange('K" + (i - 7) + "').setValue(price" + i + ");")
+    eval("upload.getRange('R" + (i - 7) + "').setValue(fab" + i + ");");
+    eval("upload.getRange('B" + (i - 7) + "').setValue(sku" + i + ".replace(/[^A-Za-z0-9]/g, ''))");
+    eval("upload.getRange('D" + (i - 7) + "').setValue(szn" + i + ".replace('F', 'A'))");
+    Logger.log("Product " + (i - 9) + " entered.")
+    //if (Number.isInteger((i - 6)/30)) {
+      //sct = sct + 1
+      //upct = sct - 1
+      //eval("upload" + upct + ".copyTo(ss).setName('Upload' + sct)")
+      //eval("var upload" + sct + " = ss.getSheetByName('Upload" + sct + "')");
+      //Logger.log("Sheet named Upload" + sct + " created.")
+      //SpreadsheetApp.flush()
+//}
+  }
+
+  function readValue(name) {
+    return eval(name)
+  } 
+
+  // var rowct = "9";
+
+  // var brand = sheet.getRange("A" + rowct).getValue();
+  // var stylename = sheet.getRange("B"+ rowct).getValue();
+  // var color = sheet.getRange("C"+ rowct).getValue();
+  // var sku = sheet.getRange("D"+ rowct).getValue();
+  // var gender = sheet.getRange("E"+ rowct).getValue();
+  // var category1 = sheet.getRange("F"+ rowct).getValue();
+  // var price = sheet.getRange("G"+ rowct).getValue();
+  // var fab = sheet.getRange("H"+ rowct).getValue();
+  
+};
